@@ -3,6 +3,7 @@ package com.example.imagepicker2
 
 import android.Manifest
 import android.app.Activity
+import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -33,7 +34,8 @@ import java.util.*
 const val PERMISSION_REQUEST_CAMERA = 0
 const val CAMERA_PHOTO_REQUEST = 1
 const val GALLERY_PHOTO_REQUEST = 2
-
+private val IMAGE_CAPTURE_CODE = 1001
+private var imageUri: Uri? = null
 
 class MainActivity : AppCompatActivity() {
 
@@ -57,6 +59,8 @@ class MainActivity : AppCompatActivity() {
         photo_from_gallery.setOnClickListener{
             pickPhoto()
         }
+
+
 
     }
 //
@@ -119,6 +123,15 @@ class MainActivity : AppCompatActivity() {
 
 
     private fun clickPhoto(){
+
+        val values = ContentValues()
+        values.put(MediaStore.Images.Media.TITLE, R.string.take_picture)
+        values.put(MediaStore.Images.Media.DESCRIPTION, R.string.take_picture_description)
+        imageUri = this?.contentResolver?.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values)// Create camera intent
+        val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri)// Launch intent
+        startActivityForResult(intent, IMAGE_CAPTURE_CODE)
+
         Intent(MediaStore.ACTION_IMAGE_CAPTURE).also { takePictureIntent ->
             takePictureIntent.resolveActivity(this@MainActivity!!.packageManager)?.also {
                 val photoFile: File? = try {
