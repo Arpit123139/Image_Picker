@@ -132,46 +132,47 @@ class MainActivity : AppCompatActivity() {
         intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri)// Launch intent
         startActivityForResult(intent, IMAGE_CAPTURE_CODE)
 
-        Intent(MediaStore.ACTION_IMAGE_CAPTURE).also { takePictureIntent ->
-            takePictureIntent.resolveActivity(this@MainActivity!!.packageManager)?.also {
-                val photoFile: File? = try {
-                    createFile(
-                        this@MainActivity!!,
-                        Environment.DIRECTORY_PICTURES,
-                        "jpg"
-                    )
-                } catch (ex: IOException) {
 
-                    Toast.makeText(this@MainActivity!!, getString(R.string.create_file_error, ex.message),
-                        Toast.LENGTH_SHORT).show()
-
-                    null
-                }
-                photoFile?.also {
-                    selectedPhotoPath = it.absolutePath
-                    val photoURI: Uri = FileProvider.getUriForFile(
-                        this@MainActivity!!,
-                        BuildConfig.APPLICATION_ID + ".fileprovider",
-                        it
-                    )
-                    takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI)
-                    startActivityForResult(takePictureIntent,
-                        CAMERA_PHOTO_REQUEST
-                    )
-                }
-            }
-        }
+//        Intent(MediaStore.ACTION_IMAGE_CAPTURE).also { takePictureIntent ->
+//            takePictureIntent.resolveActivity(this@MainActivity!!.packageManager)?.also {
+//                val photoFile: File? = try {
+//                    createFile(
+//                        this@MainActivity!!,
+//                        Environment.DIRECTORY_PICTURES,
+//                        "jpg"
+//                    )
+//                } catch (ex: IOException) {
+//
+//                    Toast.makeText(this@MainActivity!!, getString(R.string.create_file_error, ex.message),
+//                        Toast.LENGTH_SHORT).show()
+//
+//                    null
+//                }
+//                photoFile?.also {
+//                    selectedPhotoPath = it.absolutePath
+//                    val photoURI: Uri = FileProvider.getUriForFile(
+//                        this@MainActivity!!,
+//                        BuildConfig.APPLICATION_ID + ".fileprovider",
+//                        it
+//                    )
+//                    takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI)
+//                    startActivityForResult(takePictureIntent,
+//                        CAMERA_PHOTO_REQUEST
+//                    )
+//                }
+//            }
+//        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if(resultCode == RESULT_OK){
             when(requestCode){
-                CAMERA_PHOTO_REQUEST -> {
+                IMAGE_CAPTURE_CODE -> {
                     val file = File(selectedPhotoPath)
                     val uri = Uri.fromFile(file)
-                    employee_photo.setImageURI(uri)
-                    employee_photo.tag = uri.toString()
+                    employee_photo.setImageURI(imageUri)
+                    employee_photo.tag = imageUri.toString()
                 }
                 GALLERY_PHOTO_REQUEST ->{
                     val photoFile: File? = try {
