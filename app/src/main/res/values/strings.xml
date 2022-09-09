@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">ImagePicker2</string>
+    <string name="create_file_error">Error occurred creating file: %1$s</string>
+</resources>
